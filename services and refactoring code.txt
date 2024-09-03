@@ -1,0 +1,24 @@
+how to refactor you code
+  1- instead of writting every thing in your controller you should make a serive and include it or call it when you like
+  2- create a folder in the app folder and name it services
+  3-create a class in it for example saveDataService
+    inside this  
+                 saveDataService class{
+
+                  public function static save($data,$id=null)//why i give him id=null as i will user this function in 
+                                                              //create and update 
+                 //1-first method you can use
+
+                       if($id==null){
+                         modelName::query()>create($data)  
+
+                        }else{
+                          modelName::query()->find($id)->update($data)      
+               
+                        }   
+
+                //2-second method you can use in create and update in the same time in you controller
+                ModelName::updateOrCreate([
+                   'id'=$id
+             
+                   ],$data)   // this mean that you can create and update if you give the id 

@@ -1,0 +1,110 @@
+                                                                             بسم الله الرحمن الرحيم  
+
+
+1- Route::get('/eslam ',functin(){
+   echo 'i am eslam elsayed';
+    
+   });
+2-king of methods get - post - delete - pathch -put
+
+3-pretty route  => Route::get('/test',[testController::class,'index']);
+
+4-returning view in controller   public function index(){
+                                   return view('index');
+                                
+                               }
+
+5-shorthand
+      Route::view('/welcom','index');
+
+      Route::redirect('/welcom','https://www.googel.com');
+
+6-route parameters   Route::get('/welcom/{name}',[testController::class,'index');
+
+7-route naming    Route::get('/welcom'[testController::class,'index'])->name('indexName')
+
+8-Route grouping 
+     Route::controller(testController::class)->prefix('/test')->name('test.')->group(function(){
+
+       Route::get('/welcom','index')->name('index');
+       Route::get('/welcom/{name}','welcom')->name('welcom');
+
+
+
+     }
+
+);
+
+group  =>mean that all route in this group will have a repeted thing like in the example above 
+prefix  =>means that all routes in this group will statrt with this this prefix
+name   =>means that al routes it group name will start with this name
+
+9-//get this url if the method get or post
+
+Route::match(['get','post'],'/home',function(){
+    return view('welcom');
+
+});
+
+
+10-//get this url if the method any kind get or post or delete
+Route::any('/about',function (){
+    return view('about');
+});
+
+
+
+11-//but a constraint on the route
+$route = Route::get('/products/{id}', function () {
+    return view('products');
+})->where('id','[0-9]+');
+
+
+
+12-//prefix to breif the url
+Route::prefix('/orders')->group(function(){
+    
+    
+    //the url will be  localhost/orders/product
+    Route::get('/product',function(){
+        return view('orders.product');
+    });
+    
+
+});
+
+
+13=
+//using the middelware with routes
+ // make middleware => php artisan make:middleware chekuser
+   //write it in the kernal file      protected $middlewareAliases = [
+                  //all other middleware
+
+               'check_user'=>check_user::class,
+ //    ];
+//now use it with the route 
+Route::middleware(['checkuser'])->prefix('/orders')->group(function(){
+    Route::get('/product',function(){
+        return view('orders.product');
+    });
+});
+
+
+
+and this is the middleware you can do anything inside it like
+    public function handle(Request $request, Closure $next): Response
+    {
+         die('middelware check')  //will stop the code on this point
+        return $next($request);
+    }
+
+14=optional parameter in url of route
+   Route::get('/user/{id?}',function($id=null){
+      return .....
+     
+   });
+
+
+
+
+

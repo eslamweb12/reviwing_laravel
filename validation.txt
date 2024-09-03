@@ -1,0 +1,80 @@
+                                                             بسم الله الرحمن الرحيم
+1-rule of valdiation 
+            'username'=>'required|string',
+            'title'=>'required|string|max:10|min:5',
+            'message'=>'required|string|max:10|min:5',
+
+2-showing errors of validation in blade 
+              @if($errors->any())
+                      @foreach($errors->all() as $error )
+                        <p class="alert alert-danger"> {{$error}}</p>
+
+                      @endforeach
+              @endif
+3-show the error after the input
+              <div class="mb-2">
+                    <label>username</label>
+                    <input class="form-control" name="username" value="{{old('username')}}">
+                    @error('username')
+                    <p class="alert alert-danger">username</p>
+                    @enderror
+                </div>
+
+4-take care that any form must have @csrf token for security
+
+
+5-redirect to any page with a message 
+
+           return redirect()->back()->with('message','you questetion added successfully');
+
+6-how to show this message in the blade
+             @if(session('message'))
+
+                <p class="alert alert-danger">{{ session('message') }}</p>
+            @endif
+
+7- how to make you code more small and clean
+
+     1-make arequest   php artisan make:request formReuqest 
+      2- do it true in the auriztion 
+      3- do thses rules in the return 
+     4-and inject this request in the fuction so the code will be like this 
+
+
+function in the formRequest will like 
+
+  public function authorize(): bool
+    {
+        return true;
+    }
+   
+
+    public function rules(): array
+    {
+        return [
+            'username'=>'required|string',
+            'title'=>'required|string|max:10|min:5',
+            'message'=>'required|string|max:10|min:5',
+        ];
+    }
+
+
+    **funciton in the controller
+
+
+      public function save(formRequest $request){
+        //request methods
+        contact::query()->create(
+            $request->validated()
+
+
+        );
+
+        return redirect()->back()->with('message','you questetion added successfully');
+
+
+    }
+
+
+
+

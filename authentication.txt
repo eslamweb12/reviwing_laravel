@@ -1,0 +1,60 @@
+                                                     بسم الله الرحمن الرحيم
+
+1- how to hash you password you have alot of methods you can use them
+      1-first method  by the model variable casts
+           protected $casts = [
+                 'email_verified_at' => 'datetime',
+                  'password'=>'hashed'//by this you have the password of the user
+               ];
+
+
+       2-by bycrpt the password before saving it in the database in the controller 
+        $data=$request->validated();
+        $data['password']=bycrpt($data('password'));
+
+      
+      3-by making a function for bycreteed it 
+        public funciton setPasswordAttribute($value){
+       
+         $this->Attributes['password']=bycrpt($value)
+       }
+
+
+2- how to authenticat the user manlaly 
+    as you know auth function we wil use it in diffrent things
+     public function login (LoginRequestForm $reques){
+
+    $data=$request->validated
+        if(auth()->attempt($data))//show if the data exists or not 
+  {
+
+        return redirect()->to('/');
+   
+      }else{
+
+       return redirct()->back()->withErrors(['error','email or password is not correct']);
+    }
+  }
+
+
+3-to check the user login or not 
+   auth()->check() //check if the user login or not 
+
+
+4- to make the logout make the function in the controller of logout sure the constructro have middlwae 
+  1-publci function __constructor(){
+
+        $this->middleware('auth')->only('logout');  ///make sure that the function will be done by autheticated user only
+
+
+    }
+
+  
+   public function logout (){
+   if(auth()->check())  // check the user auth or not 
+    { 
+     auth()->logout();
+
+    }
+          return redirect()->to('/login');
+}

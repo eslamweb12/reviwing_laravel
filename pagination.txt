@@ -1,0 +1,32 @@
+                                             بسم الله الرحمن الرحيم
+*if you want to make pagination you should follow this 
+   1-istead of $users=User::query()->with('image')->orderBy(  'id','DESC' )-get();
+
+   we will replace $users=User::query()->with('image')->orderBy(  'id','DESC' )->paginate(3//this is the nubmber of 
+                                                                                        rows that you would like to show );
+ 
+ 2-in the blade that you will show thses data in 
+   after the table that you display data in it
+
+   {{$data->links()}}// it will make it like links 
+
+
+ 3-as it will show bad view we should bootstrap in the function boot  in the AppServiceProvider 
+
+
+    public function boot(): void
+    {
+
+    // Use Bootstrap styling for pagination
+
+    Paginator::useBootstrap();//we will use it
+
+    }
+  
+
+
+
+
+
+     
+   

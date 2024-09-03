@@ -1,0 +1,122 @@
+for uploading image you should do 
+   1-use morphe relationship to be esay for you to add it to any table
+   2-create the migration for image table
+            $table->string('imageable_id'); // it refers to the user id that upload the image
+            $table->string('imageable_type');
+            $table->string('name');
+
+   3-create the relation in the image model
+       public function imageable(){
+        return $this->morphTo();
+        }
+
+   4- create the relation in the user model
+        public  function image(){
+            return $this->morphOne(Image::class, 'imageable');
+        } 
+
+   5-we will make a trait folder in the public and create a trait inside it for creating the function upload 
+   trait upload_image{
+    public function upload($file,$folder_name){
+        $validExtension = ['jpg', 'jpeg', 'png', 'svg', 'gif'];//declare the valid exten 
+        if(in_array($file->getClientOriginalExtension(), $validExtension){//check if the extesion esists in the valid extn
+        $name = time().rand(0, 9999999999).'_image.'. $file->getClientOriginalExtension();///naming the file
+         $file->move(public_path('/images/'.folder_name)$name);//moving the file to the public
+         return $foldername.'/'.$name;
+        
+             
+        }else{
+              return false; 
+        }
+
+     
+ 
+   }
+
+
+
+
+    }
+take care that you should make afolder images in the public and folder users inside it
+  1- you should put a default image and name it for example   default if the user did not upload image the default image
+ will be uploaded
+
+
+
+  6-i want now to save the image in the table image
+    1-make a folder action to make it readable code 
+    2- make a class imageModelSave
+
+    class ImageModelSave
+   {
+        public static function make($id,$model_name,$file_name)
+        {
+        image::query()->create([
+            'imageable_id' => $id,
+            'imageable_type' => 'App\Models\\'.$model_name,
+            'name' => $file_name,
+
+          ]);
+
+         }
+
+    }
+   3- as  you that we upgrade the function of register to be lik this 
+
+ public  function store(RegisterRequest $request){
+
+        $data=$request->validated();
+        $data['type']='client';
+        $file=$request->file('image');
+        if($file==null){
+
+
+         $image_name='default.jpg';
+
+
+
+       }else{
+     $image_name= $this->upload($file,'users'); // this will return the folder_name/name
+   
+       }
+ 
+
+     
+
+        $user=serviceUser::save($data);  
+        ImageModelSave::make($user->id,'Users',$image_name);
+
+
+        return redirect()->back()->with('register',   'you have registered successfully');
+
+
+
+    }
+
+5-  important notic 
+   when you morphto relationship like image and related to  users table and you made the relaion morap
+   and you want to return it in resource with the data of the users
+  make a resource for image   =>php artisan make:resource ImageResource 
+  inside it return what you want 
+  and in the userResource make this if 
+
+
+
+6- how to send data for blade page
+  1-first method by compace
+        $users=User::query()->with('image')->orderBy(  'id','DESC' )->get();
+
+        $data=userResource::collection($users);
+
+        return view('admin.users',compact('data'));
+
+    2-by with
+        $users=User::query()->with('image')->orderBy(  'id','DESC' )->get();
+
+        $data=userResource::collection($users);
+
+        return view('admin.users')->with(['data',$data]);
+
+     
+   
+     

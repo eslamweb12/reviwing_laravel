@@ -1,0 +1,84 @@
+                                                                               بسم الله الرحمن الرحيم
+@extend and @yeild   @section
+1-@extend  =>to inherit the layout of the page
+2-@yelid   =>to make avariable in the blade 
+3-@section  =>to but the thing that changes    @endsection 4
+
+layout.blade.php
+
+ navbar
+
+
+ <title>
+        @yield('content')
+  </title>
+
+
+footer
+
+
+about.blade.php
+@extend('layout.php')
+
+
+@section('content')
+
+<h1> about page hello inherit the layout from </h1>
+
+
+@endsection
+
+
+
+4- how to affect on the blade by css 
+    1-we put the css file in the publci by extension 
+    2- we use in blade in the head function asset('css/style.css') => to inherit this like
+    <head>
+        <title>
+        @yield('title')
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+
+      <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    </head>
+     3- and in the file style.css you put your effects 
+
+
+
+5- showing link depending on the status of the user if he loged in or not
+      if he log in 
+      @auth()
+                <a class="nav-link disabled" style="position: relative;left: 1000px;"href="/logout">log out</a>
+
+      @endauth
+
+
+   if not or if he guest
+    @guest()
+
+                <a class="nav-link disabled" style="position: relative;left: 1000px;" href="/login">login</a>
+    @endguest
+
+
+6-request methods 
+       public function save(){
+        //request methods
+        request()->all();//return all things in the request
+        request()->only(['username']);//return username only
+        request()->except(['message']);//return all thing except message
+        request()->input('username');
+        request('username');
+
+
+    }
+
+
+
+   
+
+
+
+
+
+

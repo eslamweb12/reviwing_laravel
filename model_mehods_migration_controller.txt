@@ -1,0 +1,54 @@
+                                                    بسم الله الرحمن الرحيم
+1-get all posts from the model post
+
+   1-Post::all();
+   2-Post::query()->get();
+  
+
+2-create new record in the database
+   Post::query->create([
+      'username'=>request('username')
+      'email'=>request('email')
+    })
+
+3- you can return the data like you konw but if you want to change the format of the data user [resource collection]
+  
+   1-make resource  php artisan make:resource resourceContact
+
+   2-format or change the data that you will return in the resource like this 
+   
+   in the resource that you made 
+
+   public function toArray(Request $request): array
+    {
+        return[
+            'id'=>$this->id,
+            'username'=>$this->username,
+            'title'=>$this->title,
+            'message'=>$this->message,
+            'create_at'=>$this->created_at->format('d-m-Y'),  //this for formatting the data 
+            'published_at'=>$this->created_at->diffForHumans(),//this for know when it publihed know the time
+
+
+        ];
+    }
+    
+    3-and if you want to get all data  do this in the controller 
+     
+     public  function index(){
+        $data=contact::query()->orderBy(
+            'id','DESC')->get();
+        return ContactResource::collection($data);
+    }   
+
+
+    4- if you want to get only the first colmun do this  public  function index(){
+        $data=contact::query()->orderBy(
+            'id','DESC')->first();
+        return ContactResource::make($data);
+    }
+
+4-for making a controller with in a folder in controller like Auth/RegisterController
+     php artisan make:controller Auth/Registercontroller
+   
+       
