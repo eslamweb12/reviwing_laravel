@@ -1,0 +1,29 @@
+                                                      بسم الله الرحمن الرحيم
+when we use soft delete ?? 
+  we use soft delete when we have a table with relationship and this table if we delete any thing from it it will affect
+  on the other table so 
+ 
+  for example 
+   user_table    id    user_name   email    password
+
+   product_table   id    user_id   name    info   price 
+ df
+in this example the user may have a product so we put a forign key in the product table constrained to the user 
+if the admin like to delete any product it will affect on the products that the user bout it so we will add soft delete 
+with the product table
+
+
+how will we use it?
+  in the migration of product_table add =>  $table->softDeletes();
+ 
+ in the model of product_tabe define soft delete by using it is namspaece   =>use Illuminate\Database\Eloquent\SoftDeletes;
+ and use its trait  =>    use SoftDeletes;
+
+
+ if i delete the any product deleted_at column will be added to the table and have the time that it deleted at it
+
+
+this a great prefi about soft delete
+  
+
+ 

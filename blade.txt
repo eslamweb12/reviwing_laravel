@@ -72,7 +72,8 @@ about.blade.php
 
 
     }
-
+7- we add js effect by also create afolder js in public and create a file inside it script.js and add any thing in it
+   in the blade layout   we add =>{{asset("js/script.js")}}
 
 
    

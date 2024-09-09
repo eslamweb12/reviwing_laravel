@@ -44,11 +44,19 @@
 
     4- if you want to get only the first colmun do this  public  function index(){
         $data=contact::query()->orderBy(
+
             'id','DESC')->first();
         return ContactResource::make($data);
     }
 
 4-for making a controller with in a folder in controller like Auth/RegisterController
      php artisan make:controller Auth/Registercontroller
+
+5-resource controller ??
+   it is used to make all routes and all function in the function by one commnd
    
+   php artisan make:controller ProductControllerResource -r // it will buil all function and thier routes 
+ 
+  and if you write =>php artisan r:l it will show all routes that you will use with this controller and it name
+
        

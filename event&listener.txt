@@ -1,0 +1,42 @@
+                                                     بسم الله الرحمن الرحيم   
+
+what is the event & listner ?
+i want to do some thing a fter some event 
+  1- create event  =>php artisan make:event Productevent 
+  2- create listener =>php artisan make:listener ProuctImageListener
+  
+ after creation 
+   we shold first in the eventServiceProvider connect this event to this listener in the array listen=[
+                                                                                   saveProductEvent::class=>[
+                                                                             saveProductImagesListener::class,
+                                                                             ],];
+   so we will use event and listener to store the product with images but take care that we will use the listener to 
+  store the images this function for creating and updating images
+   public function __construct($data, $images,$create=true)
+    {
+        $this->data = $data;
+        $this->images = $images;
+        if($create){//check if the create is true if it is true we will create if not we will update
+            $this->data['user_id'] = auth()->id();
+
+
+        }
+        $this->product=product::query()->updateOrCreate(
+            ['id' => $this->data['id']??null],
+
+            $this->data
+        );
+
+
+    }
+
+
+
+in the listener we will upload the images 
+       foreach($event->images as $image) {
+            $name=$this->upload($image,'products');
+            ImageModelSave::make($event->product->id,'product',$name);
+
+
+        }
+         

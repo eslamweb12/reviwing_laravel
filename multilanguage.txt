@@ -1,0 +1,77 @@
+how to make you site multilanguage
+
+ 1-make tabel for languages like 
+            $table->id();
+            $table->string('prefix');
+            $table->string('name');
+            $table->timestamps();
+ 2-how to push the language =>php artisan lang:publish
+ 
+ 3- make a folder the new language like ar 
+
+  4-put in this is folder the file of the validation from the en folder
+ 
+  5-you can change on the varibles in arabic whatever you like
+    'required' => ':attribute  الحقل مظلوب.',//attribute the attribute in arabic or english depend on the lang
+     
+  6-make middleware  changeLang  and make it as a start for every route in groub like 
+  Route::group(['middleware' => 'changeMiddleware'], function () {
+    Route::post('/register',\App\Http\Controllers\RegisterController::class);
+
+ 
+  });
+
+7-  in this middleware check if the middleware has a lang or not like this
+  
+     
+    public function handle(Request $request, Closure $next): Response
+    {
+        if($request->hasHeader('lang')){ // check if the header of the postman has a lang
+            app()->setLocale($request->header('lang'));
+        }elseif($request->has('lang')){    //check if the body has a lang
+            app()->setLocale(request('lang'));
+
+        }elseif(session()->has('lang')){   check if the session in the web has a lang
+            app()->setLocale(session('lang'));
+        }
+        app()->setLocale(app()->getLocale()); //  if this above not it will set the local lang in the env
+
+        return $next($request);
+    }
+
+8-in the ar folder you will create a file keywords in it 
+ in keywords file you will return the words that will display in the validation or any thing
+ return [
+    'username'=>'اسم المستخدم ',
+    'email'=>' الاميل ',
+    'password'=>'كلمة  ',
+    ' phone'=>'رقم الفون  ',
+    'type'=>'نوع المستخدم ',
+
+];
+  and do it also in the en folder make also file keywords  but it return [
+    'username'=>'username',
+    'email'=>'email',
+    'password'=>'password',
+    'phone'=>'phone',
+    'type'=>'type',
+
+];
+
+9-make a function attributes in the Request 
+   public function attributes(){ 
+   return [
+      'username'=>_ _('keywords.username'),// it will the return the lang of username from keywords depend on the lang
+       and so on in the other variable,
+];
+
+
+
+}
+
+
+10 in postman you can send the lang in the body or in the header any thing but if you not send it the app will 
+ take the language from the config app.php  
+ 
+    'locale' => 'en',
+
