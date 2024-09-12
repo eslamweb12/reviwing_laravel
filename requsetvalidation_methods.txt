@@ -1,0 +1,61 @@
+                                                        بسم الله الرحمن الرحيم
+
+                                    request file validation  فال  functions   أهم ال  
+1-authrize
+      public function authorize(): bool
+    {
+
+        return true;// to make him able to validate
+    }
+
+2- rules to make the valdation rules
+   return [
+
+            'username'=>'required',
+            'email'=>'required|email',
+            'phone'=>'required',
+            'type'=>'required',
+            'password'=>'filled',
+        ];
+
+
+
+3-   attributes // to refer to the fields from the validation in the lang as you now if you have a multilanguage in 
+     you site you will  and in the validation file if it en or ar 
+
+
+ public  function attributes()
+    {
+
+
+        return [
+            'username'=>__('keywords.username'),
+            'email'=>__('keywords.email'),
+            'password'=>__('keywords.password'),
+            'phone'=>__('keywords.phone'),
+            'type'=>__('keywords.type'),
+
+
+        ];
+    }
+
+
+
+4-message   // to change on the validation message instead of the valdition file in the ar or en to be in keywords file
+  like 
+   public function messages()
+    {
+        return [
+            'username.required' => __('keywords.err_msg'), // Retrieves the message from your translation file
+        ];
+    }
+ar 
+keywords.php
+  'err_msg' => 'مظلوب',
+
+
+
+en 
+keywords.php
+   'err_msg' => 'The username field is required.',
+

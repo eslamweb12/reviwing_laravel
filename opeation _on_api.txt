@@ -1,0 +1,20 @@
+                                                    بسم الله الرحمن الرحيم 
+operation on api like
+  
+1- get all data from govenrment like the search by filetering data
+   public function index(){
+  $data=governement::query();
+  if(request->filed('name')){
+   $data->where('name' ,'like','%'.request('name').%) // will return the data that equal or have an litter from the name
+   }
+  if(request()->filed('start_date')){
+  $data->where('created_at','>=',request('start_date'))
+  }
+  if(request()->filled('end_date')){
+ $data->where('created_at','<=',request('end_date'));
+  }
+retunr $data->get();
+}
+
+
+   

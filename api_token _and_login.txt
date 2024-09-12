@@ -1,0 +1,64 @@
+                                                   بسم الله الرحمن الرحيم 
+
+function login  as you know that you should have a session to store info about the user who logged but in api 
+we does not have a session so we will create a token hashed and this token have info about this user like id and other info
+      
+befor the we should have custom validation rule in the registerForm not in a separate request
+so 
+  public function rules(){
+  if(Str::contains(request()->getRequestUri(),'login')// check in the postman the url have login or not and function 
+//Str::contain it take to thing the string and the word
+{
+        return[
+         'phone'=>'required',
+         'password'=>'required',
+      ];
+
+
+   }
+ // if not it means you are in the register 
+
+
+  return [
+
+            'username'=>'required',
+            'email'=>'required|email',
+            'phone'=>'required',
+            'type'=>'required',
+            'password'=>'filled',
+        ];
+
+
+  } 
+
+
+  and after validation we will use resource to return data and effect on it in resource file
+
+     $arr=[
+            'id'=>$this->id,
+            'name'=>$this->name,
+            'email'=>$this->email,
+            'password'=>$this->password,
+            'type'=>$this->type,
+            'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
+
+        ];
+         if(isset($this->token)){
+             $arr['token']=$this->token;
+         }
+
+        return $arr;
+
+
+
+  
+
+public function login(){
+  $creditial=['phone'=>request('phone'),'password'=>request('password')];
+  if(attempt($creditial)){
+  $data=auth()->user();
+  $data['token']=auth()->user()->createToken('phone')->planTextToken;
+  return message::success(userResource::make($data),'you logged successfully');
+  }els{
+  return message::error('phone or password is not correct',400);
+}

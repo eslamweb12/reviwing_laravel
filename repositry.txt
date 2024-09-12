@@ -1,0 +1,34 @@
+                                                      بسم الله الرحمن الرحيم
+
+Instead of building you code in the controller you can use the repsitry desgin pattern 
+
+1-make a folder Repositry
+
+2-make a file RegisterReposity inside Repostiry
+ 
+class Reposity{
+ public function create_user($data){
+ 
+ $data=User::query()->create($data);
+
+  message::success($data,  'user created successfully');
+
+  }
+
+
+3- in you controller RegisterController
+  1-create a controller and inject repositry in it
+
+  private $repo
+  publci function __constructor(Reposity $repo)// it take an object from Reposity {
+  
+  $this->repo=$repo;
+}
+
+
+
+ publci fucntion store(RegisterRequest $request){
+
+   $this->repo->create_user($request->validated());
+  
+ }

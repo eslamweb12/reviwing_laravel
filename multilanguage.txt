@@ -75,3 +75,35 @@ how to make you site multilanguage
  
     'locale' => 'en',
 
+
+12- how can i change the message of validation in by function message in the request
+ 
+
+ public function message(){
+    
+    return[
+      'username.required'=>__('keywords.username_message')// it will show the message in keywords instead of validation 
+    and so on in other fields
+
+
+
+
+}
+ar
+keywords file
+  return[
+    'username_message'=>  'هذا الحقل مظلوب لاحظ '
+]
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+                                                    بسم الله الرحمن الرحيم
+
+api respone instead of you write the respone at the end of every function do a custome message as a service
+
+1- make folder service and file message inside him
+  class message{
+
+
+   public static function success($data=[],$message='') { // we will use it at the when the response success
+
+   return response()->json(['data'=>$data,'message'=>$message]);
+   }
+
+
+
+   public static fucntion error($message='',$statu=400){// we use it when the operation failed
+
+    return response()->json(['message'=>$message,$status])
+
+    }
+    
