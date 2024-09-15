@@ -1,0 +1,123 @@
+                                                  بسم الله الرحمن الرحيم
+pipeline class in laravel ?
+
+pIn Laravel, the Pipeline class is implemented based on the Chain of Responsibility (aka CoR) design pattern.
+
+In summary; the pipelines take a job, process it, and forward it to the next pipeline.
+
+CoR is a behavioral design pattern. This pattern is process the given data
+
+with many handlers. When the request arrived at to pipe class, it processes
+
+the data and forwards the next one. The rule is simple.
+
+
+example on this procss i want to search about data by the name for example and the start_date and end_date
+
+ 1- we dont like to build it in the controller so we will build a folder in app name it filters 
+  2- we create three class in the filters file 
+    1-NameFilter  
+    2-startDateFilter
+    3-endDateFilter
+  
+
+ 
+
+
+ in the name we want to make search by name 
+ class NameFilter{
+  public function handle($request,closure $next){
+    if($request->has('name')){
+      return $next($request)->where('name','LIKE','%'.request('name').'%');
+    }
+    return $next($request);
+  }
+
+  
+ in the start_date we want to make search by start_date
+  class StartDate
+ {
+    public function handle($request, \Closure $next){
+        if($request->has('startDate')){
+            return $next($request)->where('start_date', '>=', $request->get('startDate'));
+        }
+        return $next($request);
+    }
+
+ }
+
+
+  
+ in the end_date we want to make search by end_date
+  class EndDate
+  {
+
+    public  function handle($request,\Closure $next){
+        if($request->has('end_date')){
+            return $next($request)->where('end_date','<=',request('end_date'));
+        }
+        return $next($request);
+
+
+    }
+
+  }
+
+  
+
+ and after this we use pipline to use them all in the index function 
+ 
+
+  public function index(Request $request){
+   $data=governement::query()
+   $result=app(Pipline::class)->send($data)->through([
+        NameFilter::class,
+        StartDateFilter::class,
+        endDateFilter::class,
+   ])->theReturn()->paginate(10);
+    return $result
+   }
+
+
+
+
+how to custom the code to filer by the class name  we will make a public class and extend it in an class i want 
+
+FilterRequest
+
+class FilterRequest{
+    $filter=class_basename($this)//take the baseclass ex subjectIdFilter 
+    $filter=str_replace('Filter','',$filter)// delete the filter from the class name  ex subjectId
+    $filter=Str::snake($filter)// name the class by to be like this ex subject_id
+    if($request->filled($filter)){
+     return $next($request)->where($fileter,$request->filled($filter))
+
+    }
+    return $next($request);
+    }
+
+
+
+ in for example subjectIdFilter
+  class subjectIdFilter extends FilterRequest{
+  
+ 
+you will include the filter request only and not write any thing in it 
+
+
+
+  }
+
+
+
+
+
+
+
+   
+
+
+
+
+
+

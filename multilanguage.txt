@@ -97,9 +97,108 @@ keywords file
 
 
 
+*******************************
+how to check that the filed requird in arabic and english and any languges ? if we think about this we will find that 
+ we wil have to had the new rule to the new languae and it will be so hard to do it  so we will make an action
+ 
+
+ 1-create file HadleRequesvalidtion in action folder 
+  class hadleRequesValidation{
+     public static function hadle($basic//this an array contain the data that not need to translanted,$data//this 
+    is the data which will be translatd and valdidated ){
+      $langs=Languages::query()->pluck('prefix')//to get the prefix of the 
+      foreach($langs as $lang){
+         foreach($data as $item){
+              $basic[$lang.'_'.$item]='required';
+
+           }
+       }
 
 
 
+   }
+   
+   
+ }
+
+
+ in the formRequest   
+    in the rules
+     $basic=[
+       'status'=>'required',
+        'price'=>'required', 
+     ]
+    $arr_lang=['name','info']
+   return handeRequesvalidation::handle($basic,$arr_lang);
+
+
+
+but be care if you have a lot of validtion like     name:required|string  and i want to achive it in validation
+   in the rule write the validation 
+  $arr_lang=['name:requried|string','info:nullable'];
+   
+
+  in the handleRequestValdaition
+
+  public static  function handle($basic,$data){
+        $langs=language::query()->pluck( 'prefix'); //ar en
+        foreach ($langs as $lang){ // ar en
+            foreach ($data as $item){ //    the data
+                $name=Str::before($item,':');  //name or info
+                $validation=Str::after($item,':');
+                $basic[$lang.'_'.$name]=  $validation;
+
+            }
+        }
+        return $basic;
+
+
+    }
+
+
+after you change in the rules only not in the rules
+
+
+
+after validation we want to store the data and decode it 
+if you request in postman     en_name    القاهره
+                              ar_name     cairo
+
+and you want to store it in the data
+  1- create a class handleBeforeSaving
+
+
+ class HandleBeforeSaving{
+   public function static handle($data){
+   $output=[];
+   $languages=language::qurey()->pluck('prefix')// i take the prefix ar or en
+   foreach($data as $key=>$value){
+    $lang_exist_input_name=0;
+     $foreach($languages as $language){
+         if(Str::contain($key,$language)){
+            $input_name=Str::replace($language,'',$key);// _name
+            $input_name=Str::replace('_','',$input_name)// name
+             $output[$input_name][$language]=$value// [name][ar]=القاهره
+             $lang_esist_input_name=1;
+         }
+
+     }
+     if($lang_exist_input_name==0){
+      $output[$key]=$value
+    } 
+   }
+
+    foreach ($out_put as $key => $value) {
+            $out_put[$key]=json_encode($value,JSON_UNESCAPED_UNICODE);  ;
+        }
+        return $out_put;
+
+
+we will use it in the store method in the controller 
+
+   
+      
+     
 
 
 
