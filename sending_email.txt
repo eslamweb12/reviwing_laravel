@@ -1,0 +1,56 @@
+                                                       بسم الله الرحمن الرحيم  
+sending email by mailtrap 
+1-sign in mailtrap and you have info that you need to add it in .env in your app
+
+
+2-make a mail by php artisan make:mail sendMailWelcom
+
+  *- in this class of mail take the user in the construct
+   public $user 
+   public function __construct(){
+   $this->user=auth::user();
+   }
+
+
+
+   *-in the content function pass the view 
+  
+   public function content(): Content
+    {
+        return new Content(
+            view: 'sendEmail',
+        );
+    } 
+
+   *- if you have any attachment put in the attachment function
+
+
+
+        public function attachments(): array
+    {
+        return [ 
+     put the attach here];
+    }           
+
+3- make a function for sending this mail 
+ pulic function send(){
+   
+     Mail::to(Auth::user()->email)->send(new sendmailwelcom());
+      return message::success(null,'emai send successfully',null);
+
+   
+ 
+ }
+
+
+4- in your blade you can write the view of the mail
+@extends('layout')
+
+
+@section('content')
+  <h1>welcom:{{$user->username}}</h1>
+    <p> this email sent from my system</p>
+
+@endsection
+
+

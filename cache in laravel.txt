@@ -1,0 +1,42 @@
+cache why we use cache?
+ if  you want to optimize your app and make it faster if you want to show 10000 record of blog and it will take
+ time for getting this all but not from database so you will use cache to store them 
+
+
+
+**what is the diffrence between cache and session?
+ 1-cache is global so it is avaliable to all users of the application ,but the session is avaliable for only the user and i
+ this session avaliable for only the use
+
+ 2-cache can be acced from any where in the app , but the session will be avalble for only the use 
+  
+
+ 3-the cache faster than the session 
+
+
+**how to use laravel Debugbar :to debug you app 
+
+ 1-composer require barryvdh/laravel-debugbar --dev
+ 2-php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
+
+ that is all and you will have a tab at the bottom of the
+
+
+**how to use cache to store data 
+
+public fuction index(){
+ 
+  $post=Cache::remember('post',60,function(){
+ 
+  return Post::with('category')paginate(5);
+
+
+  });
+}
+post => is the key 
+60 =>the time that the data will be deleted after it 
+
+you will see the after you refresh the page of in the debugbar in queries no query as the data is saved in the 
+cache but the time excuted you will see all queries that used 
+
+

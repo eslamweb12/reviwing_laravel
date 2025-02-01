@@ -1,0 +1,71 @@
+                                                       بسم الله الرحمن الرحيم   
+
+breeze in laravel
+*1- composer require laravel/breeze --dev
+ 2-php artisan breeze:install
+ 3-php artisan migrate
+ 4-    you will face a problem becouse of node you will solve this by adding this in postscss.confing.js
+ 
+        module.exports = {
+        plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+         },
+        };
+ 5-npm install
+ 6-npm run dev
+
+
+from where laravel breeze take these thimes from the vendor laravel src this is an important file when you 
+install breeze by commnd he he make a copy from every thing the routes and controller and blade that exist in the 
+src of laravel in the vendor and put them in the web and blade and controllers so now you know from where laravel 
+breeze take these thems
+
+
+*notice that you have a confirmation email and you delete it but take care that have in validation of
+ sotring new user that password     'password' => ['required', 'confirmed', Rules\Password::defaults()],
+  so take care and if you would like to delte or not to use the confirmation password delete the 
+  input of the confirmation_eamil and delete also confirmed from the validation 
+
+
+
+1-
+how to rest password and custumize on it  by using notification    يعني اغير الكلام بتاع الاميل اللي فوق الزرار وتحته بس
+
+
+1- create notificaion like=> php artisan make:notification updateRestPassword
+
+this is the email that will be send you an
+
+   public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->line('The introduction to the notification.')     => this line refer to the words befor button
+                    ->action('Notification Action', url('/rest-password',$this->token))     => this is the button 
+                    ->line('Thank you for using our application!');   = this line refer under the button
+    } 
+
+ 
+ and you should use this notfication in the model you should name this function like this
+   public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
+    }
+
+
+2-
+
+* take care that when you run => php artisan vendor:publish and you can choose if mail or notification or any thing 
+else you in the folder of html you have the code of the hml and in the folder of the text you have the text only\
+
+
+
+
+*email verifcation
+how to verify your email
+ 1-you should implements mustbeverified in you model
+ 
+class User extends Authenticatable implements MustVerifyEmail  <=
+  and you have a colmun verified_at will be timestamp 
+
+

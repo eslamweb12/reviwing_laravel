@@ -1,0 +1,16 @@
+                                                       بسم الله الرحمن الرحيم
+* we have two important factor in authrization
+1-assining  => to declare the role like edit on category and it wil be by things like
+    1-roles     2-permission
+
+2-checking => to check if he has the right to do this or not and it will be by thing like
+  1-policy        2-gate           3-middleware             4-helpers
+
+
+ * what is the diffrence between role and permission 
+  role general than permssion ok like if you are an editor this is a role you role in the company is editor 
+  and you can edit and delete and update only the articles this is the permission that he can do and you can give him 
+  a role and give him permission or give him his  permisson directly  and the relationship between the role and permiss
+  one to many that the role has many permission ok but the permission can have many roles so the relation ship will 
+  be many to many and we will have apivot table
+  

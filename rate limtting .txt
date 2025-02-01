@@ -1,0 +1,41 @@
+Rate limiting controls how many requests a user or client can make to your API in a given time frame. For example,
+ you might want to allow only 60 requests per minute from a single IP address. If the limit is exceeded, the server will
+ respond with a 429 Too Many Requests HTTP status code.
+
+
+**Why Use Rate Limiting?
+   Prevent Abuse: Protects your API from being overwhelmed by too many requests from a single client.
+
+   Fair Usage: Ensures all users have equal access to your API resources.
+
+   Security: Mitigates brute-force attacks, DDoS attacks, and other malicious activities.
+
+   Performance: Reduces server load by limiting excessive requests
+
+
+**How Laravel Implements Rate Limiting
+Laravel uses the throttle middleware to implement rate limiting. 
+
+
+** we configure the rate limting in the routeServiceProvider
+
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+
+public function boot()
+{
+    RateLimiter::for('api', function ($request) {
+        return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+    });
+}
+
+** you can custimze rate limmter
+RateLimter::for('login',function($request)){
+  return Limit::perminute(40)->by($request->ip)
+}
+
+if you want to apply this is throllte to routes
+
+Route::post('/login', function () {
+    // Login logic
+})->middleware('throttle:login');ss

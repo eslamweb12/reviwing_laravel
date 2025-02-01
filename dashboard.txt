@@ -1,0 +1,35 @@
+                                                      بسم الله الرحمن الرحيم
+                                                                                         ازاي نقسم الداش بورد        
+
+
+
+1-choose the theme
+                                                                                                 
+2- add the assets folder in the public folder 
+3-you should include these assets in th blade by asset function for example you want to add an image
+  <script src="{{asset('assets-fronts')}}/js/config.js"></script>   => notice that we incluede the assets-front in the 
+  blade to include every thing like image and css and js 
+
+
+how to make a link to submit by clicking on him
+  * we should but this in the href of the link of the href in the form instead of using submit button
+   <form method="post" action="{{route('logout')}}">
+                            @csrf
+                            <a class="dropdown-item" href="javascript:{}" onclick="this.closest('form').submit();return false;">
+                                <i class="bx bx-power-off me-2"></i>
+                                <span class="align-middle">Log Out</span>
+                            </a>
+
+                        </form>
+
+
+
+
+
+
+
+
+
+
+
+

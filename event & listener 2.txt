@@ -1,0 +1,48 @@
+                                                      بسم الله الرحمن الرحيم
+
+*-event => it is like data container only it does not do any logic
+
+*-listener => it does the logic
+
+*-commnd for making event =>php artisan make:event firevent
+*-commnd for making listener => php artisan make:listener Firelistener
+
+*-now you should register them together in the app eventServiceProvider file in the protected $listent varaible
+   firevent::class=>[
+   Firelistener::class,
+   ],
+
+*-we have a function   public function shouldDiscoverEvents(){
+     return false;
+  }// it mean if it is the app will not discover the event and the listener that may register  the request  
+   
+*  but eventDiscover is not true when production so the right to register them in the listen or if you want 
+ to use discove use event:cache  => it means that you do not need with every request to discover event
+
+
+*to call any event like after registering in send email to him that you registered successfully
+  1-make an event => php artisan make:event RegisterEvent
+  2-make a listener =>php artisan make:listener RegisterListener 
+  3- make notify  => php artisan make:notification loginNotification 
+
+
+in the login function  
+   $user=user::create([
+
+    ]);
+    
+    event(new RegisterEvent($user))  // do this event with the user 
+ 
+  
+in the listener we should take an instance of the model in the constructor
+
+  public function __construcr(public User $user){
+ 
+   }
+
+in the listener we should inject the event
+  public function handle(RegisterEvent $event){
+
+   $event->user->notify(new loginNotification())
+
+

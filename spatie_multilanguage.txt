@@ -1,0 +1,18 @@
+                                                                             بسم الله الرحمن الرحيم
+
+
+1- install it first =>  composer require spatie/laravel-translatable
+
+2- you should make the that have arabic and english value to be kind of json 
+   like if i have a name to be arabic and english to be    =>               $table->json('name');
+
+3-when you store a new record for example in brand 
+    public function store(storeRequest $request){
+    
+      $data=$request->validated();
+      $brand=new brand();
+      $brand->name=['en'=>$request->Name_en,'ar'=>request->Name_ar];
+      $brand->save();
+      return redirect()->to('brands.index')->with('success','new brand added in the brans');
+   }
+     

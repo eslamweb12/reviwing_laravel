@@ -1,0 +1,95 @@
+accessors and mutetors
+
+Accessors allow you to modify attribute values when retrieving them
+you want to modefiy on the attribrute when you retrive it
+
+if you want to use it with User model
+Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('first_name');
+        $table->string('last_name');
+        $table->string('email')->unique();
+        $table->string('password');
+        $table->date('date_of_birth');
+        $table->timestamps();
+    });
+
+and you want to modfiy and retrive the fullname
+class User extends Model
+{
+    // Accessor for full_name
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+}
+if you want to retrive the fullname
+$user=User::find(1)
+$user->full_name    it will returnt the first_name+last_name
+
+if you want to retive the date_of_birth but in anew view
+class User extends Model
+{
+
+   public function getDateOfBirthAttribute($value){
+     retunr  \Carbon\Carbon::parse($value)->format('F j, Y');
+   }
+}
+if you want to retive the data_of_birth
+$user=User::find(1);
+$user->data_of_birth  it will retive in the new view that you made in the model
+    ***********************
+Mutators allow you to modify attribute values before saving them to the database.
+like if you want to ensure that the password hashed before saving in the database
+
+class User extends Model
+{
+
+  public funtion setPasswordAttribute($value){
+    $this->attributes['password'] = bcrypt($value);
+  }
+}
+
+
+if you modify on the firstName before saving in the data
+class User extends Model
+{
+  public function setFirstNameAttribute($value){
+   $this->attributes['first_name'] = strtoupper($value);
+  }
+
+}
+********************************
+the full code 
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    // Accessor for full_name
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    // Accessor for date_of_birth
+    public function getDateOfBirthAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('F j, Y');
+    }
+
+    // Mutator for password
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    // Mutator for first_name
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['first_name'] = strtoupper($value);
+    }
+}
+
+

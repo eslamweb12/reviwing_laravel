@@ -1,0 +1,3 @@
+                                                         بسم الله الرحمن الرحيم
+request lifecycle in laravel 
+   begin from the public folder index.php any project in laravel start from index.php

@@ -1,0 +1,177 @@
+                                                      بسم الله الرحمن الرحيم  
+
+1-take care that any vendor used for authentication it is model must extend  authenticatable like this in the model admin  
+ 
+* to use guards in your applicationn you should create new migration and table for the new guard
+1- create model admin like user
+2-create admins 	migration like users
+
+ class Admin extends Authenticatable{
+}
+
+
+ to create a guard every guard has a provider it is like the daftar include every thing in it 
+ 1-so create new provider  we have a provider defalut users so we will create new one admins
+  'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+
+         'admins' => [
+             'driver' => 'eloquent',
+             'model' => App\Models\Admin::class,
+         ],
+    ],
+
+ 2- in the same page we want to create guard for this provider and we also have a defalut guard it is wev
+   'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+    ]
+
+
+3- we can use this guard in any guard or any blade file 
+like   =>  if i want to access the default guard i dont need to use gaurd but must use the guard if you want to access new guard
+  Auth::guard('web')->user()->name;
+
+
+
+* ok we will custmize the routes and controllers of breeze so what will copy file routes of auth and it adminAuth and copy folder auth in the controllers and 
+and it adminAuth also  and you will change the namespace to the new  in the route and in the controllers every file in the new folder 
+
+
+*you need to change protect the page of login and register so if the user logged in he can not go to the login page or the register page so 
+
+    public function handle(Request $request, Closure $next, string ...$guards): Response
+    {
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+
+            if (Auth::guard($guard)->check() && $guard=='admin') {
+
+                return to_route('back.index');
+            }
+            if (Auth::guard($guard)->check()) {
+                return to_route('front.index');
+            }
+        }
+
+        return $next($request);
+    }
+
+
+and we will use this middleware in with the routes like this to differ betweene the admin and the user
+
+Route::middleware('guest:admin')->group(function () {
+   we will put the routes of it here so for the admin routes
+})
+
+
+* for making aregister for  guard admin 
+
+ public function store(Request $request): RedirectResponse
+    {
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $admin = Admin::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+
+        Auth::guard('admin')->login($admin);
+
+        return redirect()->route('back.index');
+    }
+
+
+
+* for login the you have to option to make a copy of the file loginRequest that injected in the function of store login 
+and change it to the logic of admin or to use  so we willl custimize it for the admin in the Loginreuqst
+we will give the guard =$guard='web' as a defalut but he can give him the admin guard
+like this 
+ 
+ public function authenticate($guard='web'): void
+    {
+        $this->ensureIsNotRateLimited();
+
+        if (! Auth::guard('admin')->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => trans('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+    }
+
+
+
+
+
+* for forget password you should use the the passwords in auth the config folder that mean from where
+you will search about the email and if you forget this is the passwords array in the auth
+
+ 'passwords' => [
+        'users' => [
+            'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+    ],
+ 
+  as you see we have two broker users refer to user table and admins refer to admins table
+ so in the reset functionn we will define the broker the defalut broker is user
+
+   $status = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+
+
+ public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $status = Password::broker('admins')->sendResetLink(
+            $request->only('email')
+        );
+
+        return $status == Password::RESET_LINK_SENT
+                    ? back()->with('status', __($status))
+                    : back()->withInput($request->only('email'))
+                            ->withErrors(['email' => __($status)]);
+    }
+
+
+* in general if you use diffrent gaurd you should use broker to differ between these guards and we use broker in the
+rest passwords
+ 
+
+

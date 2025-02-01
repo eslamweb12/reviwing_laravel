@@ -1,0 +1,123 @@
+                                                         بسم الله الرحمن الرحيم 
+how to install spatie in laravel?
+
+1- composer require spatie/laravel-permission
+2-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+3-php artisan migrate 
+
+spatie in laravel create 5 tables in you database and you should know that if you want to use  spatie with 
+ any model you should use this trait =>  use HasRoles; 
+
+
+to work with permission you can create your permission as the process is to create the permissions and then create role
+ so create permissions by seeder   =>php artisan make:seeder PermissionSeeder
+
+then inside the seeder create your permissions
+
+role has permission table it is a pivot table that store in it the id of the role and the related permission 
+ 
+class PermissionSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $permissions=[
+            'add_user',
+            'show_user',
+            'edit_user',
+            'delete_user',
+
+        ];
+        foreach ($permissions as $permission) {
+            Permission::updateOrCreate([
+                'name' => $permission,
+
+            ],[
+                    'name' => $permission,
+                    'guard_name' => 'admin',
+                ]
+
+
+            );
+        }
+    }
+}
+
+
+
+
+to run the seeder use   => php artisan db:seeder
+
+
+in roles and permission we create first permission first by seeder  and  then  create roles 
+we can create role  by input has a name role_name
+
+<input name='name'>
+
+and we will create a checkbox for choosing the permissions  but take care that the name of the checkbox input will be   => name='permissionArray[$permission->name]'
+
+ i did we loop for the permission like this
+ @foreach($permissions as $permission)  
+  <input   type='checkbox' name='permissionArray[{{ $permission->name }}]' id=> 'formcheckcolor{{ $permission->id}}'    => this is the checkbox that the admin will correct it ok sign it
+  <lable   id='{{$permission->id}}'> {{ $permission->name}}   </label>  => id give it an id to link with the checkbox
+ @endforeach
+  
+  take care that the name of the input will be kind of array like
+  
+
+
+
+*function create role 
+public function store(RoleRequest $request){
+  $data=$request->validated();
+  $role= role::create(['name' => $data['name'],'guard_name'=>'admin'])   //creating role 
+  if(isset($data['permissionArray'])){
+   foreach($data['permissionArray'] as $permission =>$value){
+   $role->givePermissionTo($permission);  // this to give the permission to the role
+   }
+  }
+ return back()->with('success',' we have add this roles and permission successfully
+')
+  *if i want to show the permission that has been chooesed when it created you shoulld do this in the the input 
+   <input class='form-check form-check-primary' type='checkbox' @checked($role->hasPermisionTo($permission->name))  ?>
+
+* how to update role and it permission
+  public function update(RoleRequest $request ,Role $role){
+  $data=$requst->validated();
+  $role->update(['name'=>$data['name']]);
+  $role->syncpermssion();
+  if(isset($data['permissionArray'])){
+   foreach($data['permissionArray'] as $permission => $value){
+     $role->givePermissionTo($permission)
+   }
+
+ * how to create new admin and assign a role for it
+   public function store(StoreAdminRequest $request){
+    $data=$request->validated;
+    $admin=Admin::create($data);
+    if(isset($data['role'])){
+     $admin->assignRole($data['role']);
+    return response()->json(['success'=>]);
+  }
+
+
+
+how to check if the user has permission or not
+  @if(Auth::gaurd('admin')->user()->hasAnyPermission())
+      <button> create user </button>
+  @endif
+
+  
+   
+
+  
+  
+
+
+
+
+
+
+

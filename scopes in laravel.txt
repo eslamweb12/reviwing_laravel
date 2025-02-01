@@ -1,0 +1,52 @@
+local scope in laravel: it is used in the model for this only model
+in the model User
+public functio scopeActive($query){
+  return $query->where('active', 1);
+ }
+
+
+you can use this scope in with this model in the controller
+
+ UserController {
+  public function index(){
+   $users=User::Active()->get();
+  }
+
+**************************
+global scope:Global scopes are applied to all queries for a given model. They are useful when you want to enforce 
+certain constraints across all queries for a model, such as soft deletes, multi-tenancy, or other global filters.
+namespace App\Scopes;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
+
+class ActiveScope implements Scope
+{
+    public function apply(Builder $builder, Model $model)
+    {
+        $builder->where('active', 1);
+    }
+}
+
+
+now you have defined the globalscope  and then you should define this global scope in the model like this
+
+class User extends Model
+{
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new ActiveScope);
+    }
+}
+
+this mean that every query with User model will include this globalscope
+
+if you want not to include this globalscope with the user model do this 
+
+User::withoutGlobalScope(ActiveScope::class)->get();
+this is mean that you will get the user without the ActiveScope
+
+

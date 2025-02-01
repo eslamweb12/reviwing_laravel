@@ -1,0 +1,79 @@
+polymorph relationship
+if i have a model that related to more than model and the same relationship for example if i have a Post and video models
+and the Post has many comment and the video also has many comment so the model of comment related to two models 
+i can make a one relation than doing two relations and instead of doing foreign key in the comment for the post and 
+for the video i will do this in the migration
+
+instead of this
+ Schema::create('comments', function (Blueprint $table) {
+            $table->id(); // Creates an auto-incrementing primary key column named `id`
+            $table->text('body'); // Stores the comment text
+            $table->ForeignIdFor(Post::class)->constraied();
+           $table->ForeignIdFor(Video::class)->constraied();
+            $table->timestamps(); // Adds `created_at` and `updated_at` columns
+        });
+
+
+**do this  so i will use ploymorph
+
+ Schema::create('comments', function (Blueprint $table) {
+            $table->id(); // Creates an auto-incrementing primary key column named `id`
+            $table->text('body'); // Stores the comment text
+            $table->unsignedBigInteger('commentable_id'); // Stores the ID of the related model (e.g., Post or Video)
+            $table->string('commentable_type'); // Stores the class name of the related model (e.g., App\Models\Post or App\Models\Video)
+            $table->timestamps(); // Adds `created_at` and `updated_at` columns
+        });
+
+
+  ** and do the morph in the comments model
+ class Comment extends Model
+{
+    public function commentable()
+    {
+        return $this->morphTo();
+    }
+}
+
+** and in the post model do this 
+
+class Post extends Model
+{
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+}
+
+
+** and in the Video model do this
+
+class Video extends Model
+{
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+}
+
+**if you want to use this  if you want to access the comment by the post model 
+$post = Post::find(1);
+
+foreach ($post->comments as $comment) {
+    echo $comment->body;
+}
+
+$video = Video::find(1);
+foreach ($video->comments as $comment) {
+    echo $comment->body;
+}	
+
+*** if you want to access the post by the commentable relatinship
+
+$comment = Comment::find(1);
+
+$commentable = $comment->commentable;
+
+// $commentable will be either a Post or Video model instance
+echo $commentable->title;
+
+
