@@ -40,3 +40,38 @@ you will see the after you refresh the page of in the debugbar in queries no que
 cache but the time excuted you will see all queries that used 
 
 
+** how to store data in the cache for ever 
+
+public function index(){
+ 
+ $posts= Cache::rememberForEver('post',function(){
+    return Post::with('categories')->paginate(6);
+ })
+ return view('index',compact('posts'));
+}
+
+
+
+** how to delete data from cache
+1-for locally and on production
+ Route::get('forget-cache',function(){
+ 
+  Cache::forget('post');
+ });
+ 
+if you visit this route the data will be deletd form the cache
+
+2-if you run this commnd => php artisan cache:clear the data will be deleted from the cache  but this will use for locally 
+
+**** 
+how to use paginate with cache 
+
+public function index(){
+ $post= Cache::remember('post-page-'.request('page',1),60,function(){
+   return Post::with('categories')->paginate(5);
+    
+
+});
+
+
+
