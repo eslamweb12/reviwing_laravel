@@ -1,0 +1,68 @@
+1- how to get data 
+ 
+ *all data
+ public function index(){
+   return DB::table('posts')->get() or ->first() or ->find($id);
+   return view( 'posts',compact( 'posts'));
+ }
+
+
+ *pluck 
+  DB::table('posts')->pluck('title')
+
+ 
+ *where 
+ DB::table('posts')->where( 'id',$id)->get()
+ DB::table('posts')->where( 'id', '>', 10)->where('id',20);  return id form 10 to 20 
+
+
+
+ **how to insert data
+ DB::table('posts')->insert([
+   'title'=> 'this is the first title',
+   'description'=> 'this is the first title',
+   'name'=> 'this is the first title',
+
+  ]);
+
+  
+ **how to update data
+ DB::table( 'posts')->where('id',$id)->update([
+  'title'=> 'this is the first title',
+  ]);
+
+
+
+ **how to delete data 
+ DB::table('posts')->where( 'id', $id)->delete();
+ or
+ DB::table('posts')->delete(id);
+
+
+ 
+ 
+ **join tables
+  posts table   categories table
+
+  DB::table( 'posts')->join( 'categories', 'posts.category_id', '=', 'categories.id')->get();	
+
+ * you can specfiy the data that will show
+  DB::table( 'posts')->join( 'categories', 'posts.category_id', '=', 'categories.id')
+  ->select('posts.*')
+  ->get();
+
+
+ **aggregates in laravel with query builder
+  DB::table('posts')->count(); // this is will count the number of row in the posts table 
+
+  DB::table('posts')->sum('view')  //this will sum the view coulmn in the table of the post
+  and also you can use 
+  1-min('view')   //will get the min 
+  2-max('view')   //will get the max
+  3-avg('view')   //will get the average
+  
+ 
+
+ 
+ 
+  

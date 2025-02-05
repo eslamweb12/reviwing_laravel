@@ -1,0 +1,67 @@
+what is the facade ?
+In Laravel, a Facade is a design pattern that provides a static interface to classes available in the application's service container. Facades serve as 
+"static proxies" to underlying classes in the service container, providing a concise and expressive way to access Laravel's features without needing to manually 
+resolve dependencies or instantiate objects.
+
+
+
+**how to create a facade in you app?
+make folder and call it facades in the app folder
+
+make a file and call it CustomeFace 
+
+like this
+<?php
+namespace App\facades;
+
+class CustomFacade extends Facade{  // every facade class should extend the facade class
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()    // this function should be in every facade 
+    {
+        return 'custom-facade';
+    }
+
+}
+
+?>
+
+and after this you createt the class that has a function 
+
+<?php
+namesapce App\Services;
+
+class CustomeService{
+
+ public function doSomeThing(){
+  return 'this for testing the facade class';
+ }
+
+ }
+?>
+
+and then you should the serviceProvider for it run => php artisan make:provider CustomServiceProvider
+
+inside this provider
+
+public function register (){
+
+  $this->app->bind('custom-facade',function(){
+   return new CustomeService();
+});
+
+ public function boot(){
+ 
+
+ }
+
+****
+ if you want to use the 
+
+  CustomFacade::doSomething();  // this when you want to use facade 
+
+you should register the provider and the facade in htep
+

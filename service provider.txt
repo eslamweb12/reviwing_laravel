@@ -1,0 +1,15 @@
+what is the service provider ? 
+
+In Laravel, a service provider is a crucial part of the framework's service container and dependency injection system.
+Service providers are the central place to configure and bootstrap your application. They are responsible for binding 
+classes or interfaces into the service container, registering event listeners, middleware, and more.
+
+and you can make your provider by run this commnd =>php artisan make:provider PaymentServiceProvider
+
+and you should register it in the providers in the bootstrpa like this
+<?php
+
+return [
+    App\Providers\AppServiceProvider::class,
+    App\Providers\PaymentServiceProvider::class,
+];

@@ -1,0 +1,44 @@
+what is the helpers in laravel?
+helper you made a folder in the app and you name it Helper and make a file in side helpers.php and you should
+register it in the psr-4 and run the autoload to use it
+
+<?php
+
+public function upload_image($request,$folderName){
+ 
+ $path=null
+
+ if($request->hasFile('image'){
+  $file=$request->file('image');
+  $newName=rand().'.'$file->getClientOriginalExtension();
+  $path=$file->storeAs($folderName.'-images',$newName,'public')
+  return $path;
+ 
+ 
+ 
+ }
+
+?>
+
+now if you want to update the image
+$data=Blog::findOrFail($id);
+
+
+if($request->hasFile('image')){
+  if($data->image){
+   Storage::disk('public')->delete($data->image);
+  }
+  $data->image=uploadImage($request,'blog');
+}
+ $data->save()
+
+
+
+
+
+
+if you want to delete the image
+$data=findOrFail($id)
+
+ if($data->image){
+  storage::disk('public')->delete($data->image);

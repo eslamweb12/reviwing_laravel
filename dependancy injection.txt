@@ -1,0 +1,59 @@
+what is the dependancy injection ? 
+dependancy injection used when you want to inject class or to use a class in another class without using make 
+and object 
+for EX:
+ class car{
+  public function buy($string){
+   dd($string);
+  }
+  
+ 
+ }
+
+ class another{
+    public function __construct() {
+        $this->car = new Car(); // Initialize the Car object
+    }
+
+    public function doSomething() {
+        $this->car->buy('image'); // Call the `buy` method on the Car object
+    }
+
+  }
+
+the dependancy injection do this without takeing and object 
+so the code with dependancy injection
+  class car{
+  public function buy($string){
+   dd($string);
+  }
+  
+ 
+ }
+
+ class another{
+  $crra;
+    public function __construct(Car $car) {
+
+     $this->Crra=$car
+      
+    }
+
+    public function doSomething() {
+       $this->$crra->buy('image');
+    }
+
+  }
+
+
+so now you can use all functions in the car class as you inject it in the construct
+
+
+
+but you can also in this in the function like 
+public function buy(Car $car){
+
+ $car->buy('image');
+ }
+
+    

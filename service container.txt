@@ -1,0 +1,57 @@
+In Laravel, a service container is a powerful tool for managing class dependencies and performing dependency injection.
+
+
+Key Concepts:
+  Binding: Registering a class or interface with the container, specifying how it should be resolved.
+
+  Resolving: Retrieving an instance of a class or interface from the container.
+
+  Dependency Injection: Automatically injecting dependencies into a class when it is instantiated.
+
+
+* it work it manage the class dependacny and dependancy injection and binding class or register class
+ 
+so as we know in the lesson of dependancy injection the service container provide the dependacny injection 
+
+but if the class that will be injected in another class must take avaraible in the construct like this
+
+class firstClass{
+
+ $apiKey;
+
+ public function __construct($apiKey){
+ 
+ $this->apiKey=$apiKey;
+
+ }
+
+ public function sayHello(){
+ 
+  dd('image');
+ }
+}
+
+class SecondClass{
+
+ public function injected(FirstClass $first){
+
+  $first->sayhello();
+ }
+}
+
+*but it will give you an error as you should register the class as it is required a varible in the construct
+
+how to do this?
+
+
+ you  will register in the service provider in the register method 
+
+ public function register(){
+
+ $this->app->bind(FirstClass::class,function(){
+ 
+  return new  firstClass('image');// image only for testing
+
+
+ })
+  

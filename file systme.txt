@@ -1,0 +1,10 @@
+there is more kinds of drivier when you storage file
+
+1-local :Ideal for small applications or when you don’t need cloud storage.
+   path:storage/app
+
+2-public : Storing user-uploaded files (e.g., images, documents) that need to be publicly accessible.
+  path:storage/app/public
+
+ S3 Driver
+ and more
